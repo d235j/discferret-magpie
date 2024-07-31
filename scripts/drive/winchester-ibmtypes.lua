@@ -88,7 +88,7 @@ function init()
 		local nheads = iter()	-- number of heads
 
 		-- calculate drive size in MBytes
-		local mbytes = (ncyls * nheads * 17 * 512) / 1024 / 1024
+		local mbytes = math.floor(((ncyls * nheads * 17 * 512) / 1024 / 1024) + 0.5)
 
 		-- save drivespec information (standard 2ms seek time)
 		tn = string.format("pctype%02d", dtype)
