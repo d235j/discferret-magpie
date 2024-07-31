@@ -19,11 +19,6 @@
 
 using namespace std;
 
-// Pull in the LuaBit library
-extern "C" { 
-	LUALIB_API int luaopen_bit(lua_State *L);
-}
-
 CScriptInterface::CScriptInterface(const std::string _filename)
 {
 	int err;
@@ -34,7 +29,6 @@ CScriptInterface::CScriptInterface(const std::string _filename)
 	// TODO: error checking! throw exception if something goes wrong!
 	L = luaL_newstate();
 	luaL_openlibs(L);
-	luaopen_bit(L);
 
 	// Set some base constants
 	struct { string name; unsigned long val; } LCONSTS[] = {
@@ -81,7 +75,7 @@ CDriveScript::CDriveScript(const std::string _filename) : CScriptInterface(_file
 {
 	// Scan through all the Drive Specs in this file -- TODO: error check
 	try {
-		lua_getfield(L, LUA_GLOBALSINDEX, "drivespecs");
+		lua_getglobal(L, "drivespecs");
 		if (!lua_istable(L, -1)) {
 			throw EDriveSpecParse("DriveSpec script does not contain a 'drivespecs' table.", filename);
 		}
@@ -129,7 +123,7 @@ CDriveScript::CDriveScript(const std::string _filename) : CScriptInterface(_file
 CDriveInfo CDriveScript::GetDriveInfo(const std::string drivetype)
 {
 	// get the drivespecs table
-	lua_getfield(L, LUA_GLOBALSINDEX, "drivespecs");
+	lua_getglobal(L, "drivespecs");
 
 	// make sure it's a table
 	if (!lua_istable(L, -1)) {
@@ -218,7 +212,7 @@ bool CDriveScript::isDriveReady(const std::string drivetype, const unsigned long
 
 	// TODO: check drive type is in mDrives?
 
-	lua_getfield(L, LUA_GLOBALSINDEX, "isDriveReady");
+	lua_getglobal(L, "isDriveReady");
 	lua_pushstring(L, drivetype.c_str());	// drive type string
 	lua_pushnumber(L, status);				// status value from discferret_get_status()
 	err = lua_pcall(L, 2, 1, 0);	// 2 parameters, 1 return value
@@ -242,7 +236,7 @@ int CDriveScript::getDriveOutputs(const std::string drivetype, const unsigned lo
 
 	// TODO: check drive type is in mDrives?
 
-	lua_getfield(L, LUA_GLOBALSINDEX, "getDriveOutputs");
+	lua_getglobal(L, "getDriveOutputs");
 	lua_pushstring(L, drivetype.c_str());	// drive type string
 	lua_pushnumber(L, track);				// physical track
 	lua_pushnumber(L, head);				// physical head

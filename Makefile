@@ -148,7 +148,7 @@ EXT_OBJ		=
 LIB			=	discferret
 
 # List of libraries handled by pkg-config
-LIBPKGC		=	lua5.1 lua5.1-bitop libusb-1.0
+LIBPKGC		=	lua5.3 libusb-1.0
 
 # Library paths -- where to search for the above libraries
 LIBPATH		=	./libdiscferret/output

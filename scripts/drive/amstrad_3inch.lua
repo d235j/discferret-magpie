@@ -77,6 +77,6 @@ Given the current drive status flags, identify whether the drive is ready for us
 ]]
 function isDriveReady(drivetype, status)
 	-- Amstrad 3in drives have a READY output. We may as well use it.
-	return (bit.band(status, STATUS_READY_DCHG) ~= 0)
+	return ((status & STATUS_READY_DCHG) ~= 0)
 end
 

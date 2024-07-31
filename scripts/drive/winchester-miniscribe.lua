@@ -46,10 +46,10 @@ function getDriveOutputs(drivetype, track, head, sector)
 
 	-- Handle side selection
 	if head > drivespecs[drivetype]['heads'] then error("Head number " .. head .. " out of range.") end
-	if (bit.band(head, 1) ~= 0) then pins = pins + PIN_SIDESEL end
-	if (bit.band(head, 2) ~= 0) then pins = pins + PIN_DS1 end
-	if (bit.band(head, 4) ~= 0) then pins = pins + PIN_DS2 end
-	if (bit.band(head, 8) ~= 0) then pins = pins + PIN_DS3 end
+	if ((head & 1) ~= 0) then pins = pins + PIN_SIDESEL end
+	if ((head & 2) ~= 0) then pins = pins + PIN_DS1 end
+	if ((head & 4) ~= 0) then pins = pins + PIN_DS2 end
+	if ((head & 8) ~= 0) then pins = pins + PIN_DS3 end
 
 	return pins
 end
@@ -60,7 +60,7 @@ Given the current drive status flags, identify whether the drive is ready for us
 function isDriveReady(drivetype, status)
 	-- DENSITY ==> Seek Complete
 	-- RY/DCHG ==> Drive Ready
-	if bit.band(status, STATUS_DENSITY + STATUS_READY_DCHG) == (STATUS_DENSITY + STATUS_READY_DCHG) then
+	if (status & (STATUS_DENSITY + STATUS_READY_DCHG)) == (STATUS_DENSITY + STATUS_READY_DCHG) then
 		return true
 	else
 		return false
